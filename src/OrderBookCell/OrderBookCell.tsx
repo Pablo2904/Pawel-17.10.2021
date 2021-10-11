@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { RowCell } from "./OrderBookCell.styles";
 
-type OrderBookCellType = {
+type OrderBookCellPropsType = {
   content: string;
   isBid: boolean;
   isHeader?: boolean;
@@ -9,7 +9,7 @@ type OrderBookCellType = {
 };
 
 export const OrderBookCell = memo(
-  ({ content, isHeader, isBid, color }: OrderBookCellType) => (
+  ({ content, isHeader, isBid, color }: OrderBookCellPropsType) => (
     <RowCell color={color} isBid={isBid} isHeader={isHeader}>
       {content}
     </RowCell>

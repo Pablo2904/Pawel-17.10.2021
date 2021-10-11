@@ -1,13 +1,13 @@
 import { memo } from "react";
 import { Spread } from "./OrderBookSpread.styles";
 
-type OrderBookSpreadProps = {
+type OrderBookSpreadPropsType = {
   spread: number;
   precentageSpread: string;
 };
 
 export const OrderBookSpread = memo(
-  ({ spread, precentageSpread }: OrderBookSpreadProps) => (
+  ({ spread, precentageSpread }: OrderBookSpreadPropsType) => (
     <Spread>
       Spread {spread.toFixed(1)} ({precentageSpread}%)
     </Spread>

@@ -9,18 +9,18 @@ import {
 import { Orders, OrderBookOrdersDict } from "../types";
 import colors from "../styles";
 
-type OrderBookSpreadProps = {
+type OrderBookSpreadPropsType = {
   orders: OrderBookOrdersDict;
 };
 
-export const OrderBookContainer = ({ orders }: OrderBookSpreadProps) => {
+export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
   const { asks, bids } = orders;
   const askPrices = Object.keys(asks);
   const bidPrices = Object.keys(bids);
   if (!askPrices.length && !bidPrices.length)
     return <OrderBookLoading>Loading...</OrderBookLoading>;
-  const bestTwentyAsks = askPrices?.splice(0, 20);
-  const bestTwentyBids = bidPrices?.splice(-20);
+  const bestTwentyAsks = askPrices?.slice(0, 20);
+  const bestTwentyBids = bidPrices?.slice(-20).reverse();
   const lowestAskPrice = Number(bestTwentyAsks[0]);
   const highestBidPrice = Number(bestTwentyBids[0]);
   const spread = lowestAskPrice - highestBidPrice;

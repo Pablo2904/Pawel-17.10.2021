@@ -4,7 +4,7 @@ import { OrderProgress, RowWrapper } from "./OrderBookRow.styles";
 import OrderBookCell from "../OrderBookCell";
 import colors from "../styles";
 
-export type OrderBookRowProps = {
+export type OrderBookRowPropsType = {
   price?: string;
   size?: number;
   total?: number;
@@ -21,7 +21,7 @@ export const OrderBookRow = memo(
     precentageCoverage,
     colorOverride,
     type,
-  }: OrderBookRowProps) => {
+  }: OrderBookRowPropsType) => {
     const isBid = type === Orders.BIDS;
     const background = isBid ? colors.greenBackground : colors.redBackground;
     const color = isBid ? colors.greeFont : colors.redFont;

@@ -1,12 +1,12 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
-import { WebSockets } from "./WebSocket/WebSockets";
+import AppContainer from "./AppContainer";
 import { GlobalStyle } from "./styles";
 
 ReactDOM.render(
   <StrictMode>
     <GlobalStyle />
-    <WebSockets />
+    <AppContainer />
   </StrictMode>,
   document.getElementById("root")
 );

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import colors from "../styles";
 
-export const WebSocketWrapper = styled.div`
+export const AppMainContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;

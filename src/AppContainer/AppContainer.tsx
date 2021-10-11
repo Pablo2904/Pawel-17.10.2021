@@ -6,7 +6,7 @@ import { useInterval, useTabBlurFocus, TabState } from "../Hooks";
 import OrderBookContainer from "../OrderBookContainer";
 import OrderBookHeader from "../OrderBookHeader";
 import { Feeds, Orders, ProductsIds, OrderBookOrdersDict } from "../types";
-import { WebSocketWrapper, AppContainerWrapper } from "./WebSockets.styles";
+import { AppMainContainer, AppContainerWrapper } from "./AppContainer.styles";
 import Button from "../Button";
 import Overlay from "../Overlay";
 
@@ -30,7 +30,7 @@ type RequestData = {
   event?: string;
 } & OrdersData;
 
-export const WebSockets = () => {
+export const AppContainer = () => {
   const SOCKET_URL = "wss://www.cryptofacilities.com/ws/v1";
   const RECONNECT_ATTEMPS_AMOUNT = 10;
   const [selectedId, setSelectedId] = useState<ProductsIds>(
@@ -159,10 +159,11 @@ export const WebSockets = () => {
 
   useEffect(() => {
     handleConnect(ConnectionEvent.unsubscribe, prevSelectedId);
+    const clonedData = cloneDeep(data);
     const clearedOldData = {
-      ...cloneDeep(data),
-      ...(data[prevSelectedId].asks = {}),
-      ...(data[prevSelectedId].bids = {}),
+      ...clonedData,
+      ...(clonedData[prevSelectedId].asks = {}),
+      ...(clonedData[prevSelectedId].bids = {}),
     };
     setData(clearedOldData);
     handleConnect(ConnectionEvent.subscribe, selectedId);
@@ -196,12 +197,14 @@ export const WebSockets = () => {
   const errorCallback = stopThrottle && !errorWS ? resumeSubscribe : undefined;
   return (
     <AppContainerWrapper>
-      <WebSocketWrapper>
-        <OrderBookHeader />
-        {orderBookContainer}
-        <Button onClick={onToogleClick} name="Toogle Product" />
-        {shouldRenderFPS && averageFps && `FPS: ${averageFps}`}
-      </WebSocketWrapper>
+      <main>
+        <AppMainContainer>
+          <OrderBookHeader />
+          {orderBookContainer}
+          <Button onClick={onToogleClick} name="Toogle Product" />
+          {shouldRenderFPS && averageFps && `FPS: ${averageFps}`}
+        </AppMainContainer>
+      </main>
       {isError && <Overlay onBtnClick={errorCallback} message={errorMsg} />}
     </AppContainerWrapper>
   );
