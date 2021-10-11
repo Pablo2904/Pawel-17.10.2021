@@ -3,21 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "lodash": "^4.17.21",
+    "fps-react": "^0.1.6",
+    "lodash.clonedeep": "^4.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-fps-stats": "^0.1.3",
     "react-scripts": "4.0.3",
     "react-use-websocket": "^2.8.0",
-    "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1"
+    "styled-components": "^5.3.1",
+    "typescript": "^4.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,6 +37,14 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash.clonedeep": "^4.5.6"
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/styled-components": "^5.1.15"
   }
 }
