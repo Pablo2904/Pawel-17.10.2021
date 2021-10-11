@@ -14,13 +14,14 @@ type OrderBookSpreadPropsType = {
 };
 
 export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
+  const ROWS_AMOUNT = 20;
   const { asks, bids } = orders;
   const askPrices = Object.keys(asks).sort();
   const bidPrices = Object.keys(bids).sort();
   if (!askPrices.length && !bidPrices.length)
     return <OrderBookLoading>Loading...</OrderBookLoading>;
-  const bestTwentyAsks = askPrices?.slice(0, 20);
-  const bestTwentyBids = bidPrices?.slice(-20).reverse();
+  const bestTwentyAsks = askPrices?.slice(0, ROWS_AMOUNT);
+  const bestTwentyBids = bidPrices?.slice(-ROWS_AMOUNT).reverse();
   const lowestAskPrice = Number(bestTwentyAsks[0]);
   const highestBidPrice = Number(bestTwentyBids[0]);
   const spread = lowestAskPrice - highestBidPrice;
@@ -34,7 +35,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
     bids: {},
   };
 
-  new Array(20).fill("").reduce(
+  new Array(ROWS_AMOUNT).fill("").reduce(
     (curr, next, index) => {
       totalDict.asks[index] = curr.ask;
       totalDict.bids[index] = curr.bid;
@@ -54,7 +55,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
         <OrderBookRow colorOverride={colors.grey} type={Orders.BIDS} />
         {bestTwentyBids.map((price, index) => {
           const precentageCoverage =
-            (totalDict.bids[index] / totalDict.bids[19]) * 100;
+            (totalDict.bids[index] / totalDict.bids[ROWS_AMOUNT - 1]) * 100;
           return (
             <OrderBookRow
               key={`bids-${price}`}
@@ -73,7 +74,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
         <OrderBookRowsContainer>
           {bestTwentyAsks.map((price, index) => {
             const precentageCoverage =
-              (totalDict.asks[index] / totalDict.asks[19]) * 100;
+              (totalDict.asks[index] / totalDict.asks[ROWS_AMOUNT - 1]) * 100;
             return (
               <OrderBookRow
                 key={`asks-${price}`}
