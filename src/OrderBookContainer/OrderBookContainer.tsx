@@ -15,8 +15,8 @@ type OrderBookSpreadPropsType = {
 
 export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
   const { asks, bids } = orders;
-  const askPrices = Object.keys(asks);
-  const bidPrices = Object.keys(bids);
+  const askPrices = Object.keys(asks).sort();
+  const bidPrices = Object.keys(bids).sort();
   if (!askPrices.length && !bidPrices.length)
     return <OrderBookLoading>Loading...</OrderBookLoading>;
   const bestTwentyAsks = askPrices?.slice(0, 20);
