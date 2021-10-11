@@ -34,13 +34,13 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
     bids: {},
   };
 
-  bestTwentyBids.reduce(
+  new Array(20).fill("").reduce(
     (curr, next, index) => {
       totalDict.asks[index] = curr.ask;
       totalDict.bids[index] = curr.bid;
       return {
-        bid: curr.bid + bids[bestTwentyBids[index + 1]],
-        ask: curr.ask + asks[bestTwentyAsks[index + 1]],
+        bid: curr.bid + (bids[bestTwentyBids[index + 1]] || 0),
+        ask: curr.ask + (asks[bestTwentyAsks[index + 1]] || 0),
       };
     },
     {
