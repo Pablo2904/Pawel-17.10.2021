@@ -98,6 +98,7 @@ export const AppContainer = () => {
       })
     );
   const resumeSubscribe = useCallback(() => {
+    setData(defaultObject);
     setStopThrottle(false);
     handleConnect(ConnectionEvents.subscribe, selectedId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,7 +107,7 @@ export const AppContainer = () => {
   useEffect(() => {
     if (recconectAttemps < 1)
       setErrorWS(
-        "Coudn't reconnect, try to reload page or please contact our support team."
+        "Couldn't reconnect, try to reload page or please contact our support team."
       );
   }, [recconectAttemps]);
 
@@ -125,13 +126,7 @@ export const AppContainer = () => {
 
   useEffect(() => {
     handleConnect(ConnectionEvents.unsubscribe, prevSelectedId);
-    const clonedData = cloneDeep(data);
-    const clearedOldData = {
-      ...clonedData,
-      ...(clonedData[prevSelectedId].asks = {}),
-      ...(clonedData[prevSelectedId].bids = {}),
-    };
-    setData(clearedOldData);
+    setData(defaultObject);
     handleConnect(ConnectionEvents.subscribe, selectedId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
