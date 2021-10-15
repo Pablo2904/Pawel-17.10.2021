@@ -2,30 +2,28 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import cloneDeep from "lodash.clonedeep";
 import { useFPSCore } from "fps-react";
-import { useInterval, useTabBlurFocus, TabState } from "../Hooks";
-import OrderBookContainer from "../OrderBookContainer";
-import OrderBookHeader from "../OrderBookHeader";
-import { Feeds, Orders, ProductsIds, OrderBookOrdersDict } from "../types";
+import { useInterval, useTabBlurFocus, TabState } from "hooks";
+import OrderBookContainer from "components/OrderBookContainer";
+import OrderBookHeader from "components/OrderBookHeader";
+import {
+  FeedsEvents,
+  OrdersActions,
+  ProductsIds,
+  OrdersData,
+  OrderBookData,
+} from "types";
+import { ordersHandler } from "utils";
 import { AppMainContainer, AppContainerWrapper } from "./AppContainer.styles";
-import Button from "../Button";
-import Overlay from "../Overlay";
+import Button from "components/Button";
+import Overlay from "components/Overlay";
 
-type OrderBookData = {
-  [Product in ProductsIds]: OrderBookOrdersDict;
-};
-
-type OrderList = [number, number][];
-type OrdersData = {
-  [order in Orders]: OrderList;
-};
-
-enum ConnectionEvent {
+enum ConnectionEvents {
   subscribe = "subscribe",
   unsubscribe = "unsubscribe",
 }
 
 type RequestData = {
-  feed: Feeds;
+  feed: FeedsEvents;
   product_id?: ProductsIds;
   event?: string;
 } & OrdersData;
@@ -76,47 +74,14 @@ export const AppContainer = () => {
     Math.round(fps.reduce((curr, next) => curr + next, 0) / fps.length);
 
   const handleData = (message: RequestData) => {
-    const handleNewOrders = (
-      clonedData: OrderBookData,
-      newOrders: OrderList,
-      orderType: Orders,
-      productId: ProductsIds
-    ) => {
-      const currentProduct = clonedData[productId];
-      if (currentProduct) {
-        newOrders.forEach((singleOrder) => {
-          const orderPrice = singleOrder[0];
-          const orderAmount = singleOrder[1];
-          const currentOrders = currentProduct[orderType];
-
-          if (orderAmount === 0) {
-            delete currentOrders[orderPrice];
-            return;
-          }
-          currentOrders[orderPrice] = orderAmount;
-          return;
-        });
-      }
-    };
-
     const productId = message?.product_id;
     if (productId && !Boolean(message.event)) {
       const asks = message.asks;
       const bids = message.bids;
-      const isAsks = asks.length > 0;
-      const isBids = bids.length > 0;
-
-      if (!isAsks && !isBids) return;
-
+      if (asks.length < 1 && bids.length < 1) return;
       const clonedData = cloneDeep(data);
-
-      if (isAsks) {
-        handleNewOrders(clonedData, asks, Orders.ASKS, productId);
-      }
-
-      if (isBids) {
-        handleNewOrders(clonedData, bids, Orders.BIDS, productId);
-      }
+      ordersHandler(clonedData, asks, OrdersActions.ASKS, productId);
+      ordersHandler(clonedData, bids, OrdersActions.BIDS, productId);
       setData(clonedData);
     }
   };
@@ -124,26 +89,27 @@ export const AppContainer = () => {
     setStopThrottle(false);
     setSelectedId(prevSelectedId);
   };
-  const handleConnect = (event: ConnectionEvent, product_ids: ProductsIds) =>
+  const handleConnect = (event: ConnectionEvents, product_ids: ProductsIds) =>
     sendMessage(
       JSON.stringify({
         event,
-        feed: "book_ui_1",
+        feed: FeedsEvents.BOOK,
         product_ids: [product_ids],
       })
     );
-
   const resumeSubscribe = useCallback(() => {
     setStopThrottle(false);
-    handleConnect(ConnectionEvent.subscribe, selectedId);
+    handleConnect(ConnectionEvents.subscribe, selectedId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedId]);
+
   useEffect(() => {
     if (recconectAttemps < 1)
       setErrorWS(
         "Coudn't reconnect, try to reload page or please contact our support team."
       );
   }, [recconectAttemps]);
+
   useEffect(() => {
     lastMessage && handleData(JSON.parse(lastMessage.data));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,13 +118,13 @@ export const AppContainer = () => {
   useEffect(() => {
     if (tabState === TabState.BLUR) {
       setStopThrottle(true);
-      handleConnect(ConnectionEvent.unsubscribe, selectedId);
+      handleConnect(ConnectionEvents.unsubscribe, selectedId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabState]);
 
   useEffect(() => {
-    handleConnect(ConnectionEvent.unsubscribe, prevSelectedId);
+    handleConnect(ConnectionEvents.unsubscribe, prevSelectedId);
     const clonedData = cloneDeep(data);
     const clearedOldData = {
       ...clonedData,
@@ -166,7 +132,7 @@ export const AppContainer = () => {
       ...(clonedData[prevSelectedId].bids = {}),
     };
     setData(clearedOldData);
-    handleConnect(ConnectionEvent.subscribe, selectedId);
+    handleConnect(ConnectionEvents.subscribe, selectedId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 

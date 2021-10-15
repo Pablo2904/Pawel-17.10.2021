@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
-import AppContainer from "./AppContainer";
-import { GlobalStyle } from "./styles";
+import AppContainer from "components/AppContainer";
+import { GlobalStyle } from "styles";
 
 ReactDOM.render(
   <StrictMode>

@@ -1,15 +1,15 @@
 import { memo } from "react";
-import { Orders } from "../types";
+import { OrdersActions } from "types";
 import { OrderProgress, RowWrapper } from "./OrderBookRow.styles";
-import OrderBookCell from "../OrderBookCell";
-import colors from "../styles";
+import OrderBookCell from "components/OrderBookCell";
+import colors from "styles";
 
 export type OrderBookRowPropsType = {
   price?: string;
   size?: number;
   total?: number;
   precentageCoverage?: number;
-  type?: Orders;
+  type?: OrdersActions;
   colorOverride?: string;
 };
 
@@ -22,7 +22,7 @@ export const OrderBookRow = memo(
     colorOverride,
     type,
   }: OrderBookRowPropsType) => {
-    const isBid = type === Orders.BIDS;
+    const isBid = type === OrdersActions.BIDS;
     const background = isBid ? colors.greenBackground : colors.redBackground;
     const color = isBid ? colors.greeFont : colors.redFont;
     const isHeader = !price || !size || !total;

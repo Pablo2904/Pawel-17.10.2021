@@ -1,13 +1,13 @@
-import OrderBookRow from "../OrderBookRow";
-import OrderBookSpread from "../OrderBookSpread";
+import OrderBookRow from "components/OrderBookRow";
+import OrderBookSpread from "components/OrderBookSpread";
 import {
   OrderBookWrapper,
   OrderBookPart,
   OrderBookRowsContainer,
   OrderBookLoading,
 } from "./OrderBookContainer.styles";
-import { Orders, OrderBookOrdersDict } from "../types";
-import colors from "../styles";
+import { OrdersActions, OrderBookOrdersDict } from "types";
+import colors from "styles";
 
 type OrderBookSpreadPropsType = {
   orders: OrderBookOrdersDict;
@@ -30,7 +30,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
     100
   ).toFixed(2);
 
-  const totalDict: { [order in Orders]: { [index: number]: number } } = {
+  const totalDict: { [order in OrdersActions]: { [index: number]: number } } = {
     asks: {},
     bids: {},
   };
@@ -52,7 +52,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
   return (
     <OrderBookWrapper>
       <OrderBookPart>
-        <OrderBookRow colorOverride={colors.grey} type={Orders.BIDS} />
+        <OrderBookRow colorOverride={colors.grey} type={OrdersActions.BIDS} />
         {bestTwentyBids.map((price, index) => {
           const precentageCoverage =
             (totalDict.bids[index] / totalDict.bids[ROWS_AMOUNT - 1]) * 100;
@@ -63,7 +63,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
               size={bids[price]}
               total={totalDict.bids[index]}
               precentageCoverage={precentageCoverage}
-              type={Orders.BIDS}
+              type={OrdersActions.BIDS}
             />
           );
         })}
@@ -82,7 +82,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
                 size={asks[price]}
                 total={totalDict.asks[index]}
                 precentageCoverage={precentageCoverage}
-                type={Orders.ASKS}
+                type={OrdersActions.ASKS}
               />
             );
           })}

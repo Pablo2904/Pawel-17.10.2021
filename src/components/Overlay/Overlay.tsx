@@ -5,7 +5,7 @@ import {
   OverlayMessage,
   OverlayShadow,
 } from "./Overlay.styles";
-import Button from "../Button";
+import Button from "components/Button";
 
 type OverlayPropTypes = {
   message?: string;
