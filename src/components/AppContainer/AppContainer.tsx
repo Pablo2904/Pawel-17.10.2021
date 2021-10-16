@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import cloneDeep from "lodash.clonedeep";
 import { useFPSCore } from "fps-react";
-import { useInterval, useTabBlurFocus, TabState } from "Hooks";
+import { useInterval, useTabBlurFocus, TabState } from "hooks";
 import OrderBookContainer from "components/OrderBookContainer";
 import OrderBookHeader from "components/OrderBookHeader";
 import {
