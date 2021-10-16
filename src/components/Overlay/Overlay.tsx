@@ -10,13 +10,18 @@ import Button from "components/Button";
 type OverlayPropTypes = {
   message?: string;
   onBtnClick?: () => void;
+  buttonText?: string;
 };
-export const Overlay = memo(({ message, onBtnClick }: OverlayPropTypes) => (
-  <OverlayWrapper>
-    <OverlayShadow />
-    <OverlayContent>
-      <OverlayMessage>{message}</OverlayMessage>
-      {onBtnClick && <Button onClick={onBtnClick} name="Reconnect" />}
-    </OverlayContent>
-  </OverlayWrapper>
-));
+export const Overlay = memo(
+  ({ message, onBtnClick, buttonText }: OverlayPropTypes) => (
+    <OverlayWrapper>
+      <OverlayShadow />
+      <OverlayContent>
+        <OverlayMessage>{message}</OverlayMessage>
+        {onBtnClick && (
+          <Button onClick={onBtnClick} name={buttonText || "Reconnect"} />
+        )}
+      </OverlayContent>
+    </OverlayWrapper>
+  )
+);

@@ -162,7 +162,11 @@ export const AppContainer = () => {
         <AppMainContainer>
           <OrderBookHeader />
           {orderBookContainer}
-          <Button onClick={onToogleClick} name="Toogle Product" />
+          <Button
+            dataTestid="toogle-products"
+            onClick={onToogleClick}
+            name="Toogle Product"
+          />
           {shouldRenderFPS && averageFps && `FPS: ${averageFps}`}
         </AppMainContainer>
       </main>

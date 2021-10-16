@@ -35,7 +35,11 @@ export const OrderBookRow = memo(
           total.toLocaleString("en"),
         ];
     return (
-      <RowWrapper isHeader={isHeader} isBid={isBid}>
+      <RowWrapper
+        isHeader={isHeader}
+        isBid={isBid}
+        data-testid="order-book-row"
+      >
         {!isHeader && (
           <OrderProgress
             isBid={isBid}

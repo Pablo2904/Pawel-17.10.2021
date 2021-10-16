@@ -25,7 +25,7 @@ export const OverlayShadow = styled.span`
 export const OverlayContent = styled.div`
   position: relative;
   background: ${colors.blackCharcoal};
-  padding: 26px 12px 12px;
+  padding: 26px 18px 12px;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -35,5 +35,8 @@ export const OverlayContent = styled.div`
 
 export const OverlayMessage = styled.div`
   margin-bottom: 24px;
+  font-size: 16px;
   font-weight: bold;
+  color: ${colors.milkWhite};
+  white-space: pre-line;
 `;

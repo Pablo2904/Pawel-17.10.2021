@@ -16,8 +16,12 @@ type OrderBookSpreadPropsType = {
 export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
   const ROWS_AMOUNT = 20;
   const { asks, bids } = orders;
-  const askPrices = Object.keys(asks).sort();
-  const bidPrices = Object.keys(bids).sort();
+  const askPrices = Object.keys(asks).sort((next, curr) =>
+    next.localeCompare(curr, undefined, { numeric: true })
+  );
+  const bidPrices = Object.keys(bids).sort((next, curr) =>
+    next.localeCompare(curr, undefined, { numeric: true })
+  );
   if (!askPrices.length && !bidPrices.length)
     return <OrderBookLoading>Loading...</OrderBookLoading>;
   const bestTwentyAsks = askPrices?.slice(0, ROWS_AMOUNT);
@@ -25,10 +29,9 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
   const lowestAskPrice = Number(bestTwentyAsks[0]);
   const highestBidPrice = Number(bestTwentyBids[0]);
   const spread = lowestAskPrice - highestBidPrice;
-  const precentageSpread = (
-    (spread / (lowestAskPrice + highestBidPrice)) *
-    100
-  ).toFixed(2);
+  const precentageSpread =
+    !Number.isNaN(spread) &&
+    ((spread / (lowestAskPrice + highestBidPrice)) * 100).toFixed(2);
 
   const totalDict: { [order in OrdersActions]: { [index: number]: number } } = {
     asks: {},

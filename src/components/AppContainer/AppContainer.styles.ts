@@ -13,5 +13,4 @@ export const AppContainerWrapper = styled.div`
   background: ${colors.blackCharcoal};
   color: ${colors.milkWhite};
   min-height: 100vh;
-  font-family: monospace;
 `;
