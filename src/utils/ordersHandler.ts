@@ -1,9 +1,4 @@
-import {
-  OrderBookData,
-  OrdersActions,
-  OrdersList,
-  ProductsIds,
-} from "../types";
+import { OrderBookData, OrdersActions, OrdersList, ProductsIds } from "types";
 
 export const ordersHandler = (
   clonedData: OrderBookData,

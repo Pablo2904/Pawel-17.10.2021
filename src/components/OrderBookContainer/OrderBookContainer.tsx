@@ -1,13 +1,13 @@
-import OrderBookRow from "../OrderBookRow";
-import OrderBookSpread from "../OrderBookSpread";
+import OrderBookRow from "components/OrderBookRow";
+import OrderBookSpread from "components/OrderBookSpread";
 import {
   OrderBookWrapper,
   OrderBookPart,
   OrderBookRowsContainer,
   OrderBookLoading,
 } from "./OrderBookContainer.styles";
-import { OrdersActions, OrderBookOrdersDict } from "../types";
-import colors from "../styles";
+import { OrdersActions, OrderBookOrdersDict } from "types";
+import colors from "styles";
 
 type OrderBookSpreadPropsType = {
   orders: OrderBookOrdersDict;

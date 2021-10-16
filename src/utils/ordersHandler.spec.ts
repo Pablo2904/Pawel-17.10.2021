@@ -1,5 +1,5 @@
 import { ordersHandler } from "./ordersHandler";
-import { OrdersActions, OrdersList, ProductsIds } from "../types";
+import { OrdersActions, OrdersList, ProductsIds } from "types";
 import { cloneDeep } from "lodash";
 
 const defaultOrders = {

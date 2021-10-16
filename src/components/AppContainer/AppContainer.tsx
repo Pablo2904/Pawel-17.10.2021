@@ -2,20 +2,20 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import cloneDeep from "lodash.clonedeep";
 import { useFPSCore } from "fps-react";
-import { useInterval, useTabBlurFocus, TabState } from "../Hooks";
-import OrderBookContainer from "../OrderBookContainer";
-import OrderBookHeader from "../OrderBookHeader";
+import { useInterval, useTabBlurFocus, TabState } from "Hooks";
+import OrderBookContainer from "components/OrderBookContainer";
+import OrderBookHeader from "components/OrderBookHeader";
 import {
   FeedsEvents,
   OrdersActions,
   ProductsIds,
   OrdersData,
   OrderBookData,
-} from "../types";
-import { ordersHandler } from "../utils";
+} from "types";
+import { ordersHandler } from "utils";
 import { AppMainContainer, AppContainerWrapper } from "./AppContainer.styles";
-import Button from "../Button";
-import Overlay from "../Overlay";
+import Button from "components/Button";
+import Overlay from "components/Overlay";
 
 enum ConnectionEvents {
   subscribe = "subscribe",

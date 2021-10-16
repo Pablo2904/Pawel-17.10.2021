@@ -1,5 +1,5 @@
 import { PureComponent } from "react";
-import Overlay from "../Overlay";
+import Overlay from "components/Overlay";
 import { ErrorBoundaryWrapper } from "./ErrorBoundary.styles";
 
 type Props = {};
