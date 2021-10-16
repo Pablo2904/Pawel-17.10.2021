@@ -6,8 +6,8 @@ import {
   OrderBookRowsContainer,
   OrderBookLoading,
 } from "./OrderBookContainer.styles";
-import { OrdersActions, OrderBookOrdersDict } from "../../types";
-import colors from "../../styles";
+import { OrdersActions, OrderBookOrdersDict } from "../types";
+import colors from "../styles";
 
 type OrderBookSpreadPropsType = {
   orders: OrderBookOrdersDict;

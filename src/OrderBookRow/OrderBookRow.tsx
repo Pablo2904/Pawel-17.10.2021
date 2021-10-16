@@ -1,8 +1,8 @@
 import { memo } from "react";
-import { OrdersActions } from "../../types";
+import { OrdersActions } from "../types";
 import { OrderProgress, RowWrapper } from "./OrderBookRow.styles";
 import OrderBookCell from "../OrderBookCell";
-import colors from "../../styles";
+import colors from "../styles";
 
 export type OrderBookRowPropsType = {
   price?: string;

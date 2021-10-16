@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import cloneDeep from "lodash.clonedeep";
 import { useFPSCore } from "fps-react";
-import { useInterval, useTabBlurFocus, TabState } from "../../hooks";
+import { useInterval, useTabBlurFocus, TabState } from "../hooks";
 import OrderBookContainer from "../OrderBookContainer";
 import OrderBookHeader from "../OrderBookHeader";
 import {
@@ -11,8 +11,8 @@ import {
   ProductsIds,
   OrdersData,
   OrderBookData,
-} from "../../types";
-import { ordersHandler } from "../../utils";
+} from "../types";
+import { ordersHandler } from "../utils";
 import { AppMainContainer, AppContainerWrapper } from "./AppContainer.styles";
 import Button from "../Button";
 import Overlay from "../Overlay";
