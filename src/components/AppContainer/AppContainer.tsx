@@ -17,13 +17,18 @@ import { AppMainContainer, AppContainerWrapper } from "./AppContainer.styles";
 import Button from "components/Button";
 import Overlay from "components/Overlay";
 
-enum ConnectionEvents {
-  subscribe = "subscribe",
+enum RequestEvents {
   unsubscribe = "unsubscribe",
+  subscribe = "subscribe",
 }
 
-type RequestData = {
-  feed: FeedsEvents;
+enum ResponseEvents {
+  unsubscribed = "unsubscribed",
+  subscribed = "subscribed",
+}
+
+type ResponseData = {
+  feed?: FeedsEvents;
   product_id?: ProductsIds;
   event?: string;
 } & OrdersData;
@@ -73,11 +78,20 @@ export const AppContainer = () => {
     fps.length > 0 &&
     Math.round(fps.reduce((curr, next) => curr + next, 0) / fps.length);
 
-  const handleData = (message: RequestData) => {
+  const handleData = (message: ResponseData) => {
     const productId = message?.product_id;
-    if (productId && !Boolean(message.event)) {
-      const asks = message.asks;
-      const bids = message.bids;
+    const feed = message?.feed;
+    const asks = message?.asks;
+    const bids = message?.bids;
+    if (message.event === ResponseEvents.unsubscribed)
+      return setData(defaultObject);
+    if (
+      feed &&
+      Object.values(FeedsEvents).includes(feed) &&
+      productId &&
+      asks &&
+      bids
+    ) {
       if (asks.length < 1 && bids.length < 1) return;
       const clonedData = cloneDeep(data);
       ordersHandler(clonedData, asks, OrdersActions.ASKS, productId);
@@ -89,7 +103,7 @@ export const AppContainer = () => {
     setStopThrottle(false);
     setSelectedId(prevSelectedId);
   };
-  const handleConnect = (event: ConnectionEvents, product_ids: ProductsIds) =>
+  const handleConnect = (event: RequestEvents, product_ids: ProductsIds) =>
     sendMessage(
       JSON.stringify({
         event,
@@ -98,9 +112,8 @@ export const AppContainer = () => {
       })
     );
   const resumeSubscribe = useCallback(() => {
-    setData(defaultObject);
     setStopThrottle(false);
-    handleConnect(ConnectionEvents.subscribe, selectedId);
+    handleConnect(RequestEvents.subscribe, selectedId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 
@@ -119,15 +132,14 @@ export const AppContainer = () => {
   useEffect(() => {
     if (tabState === TabState.BLUR) {
       setStopThrottle(true);
-      handleConnect(ConnectionEvents.unsubscribe, selectedId);
+      handleConnect(RequestEvents.unsubscribe, selectedId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabState]);
 
   useEffect(() => {
-    handleConnect(ConnectionEvents.unsubscribe, prevSelectedId);
-    setData(defaultObject);
-    handleConnect(ConnectionEvents.subscribe, selectedId);
+    handleConnect(RequestEvents.unsubscribe, prevSelectedId);
+    handleConnect(RequestEvents.subscribe, selectedId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId]);
 

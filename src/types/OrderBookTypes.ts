@@ -25,5 +25,5 @@ export type OrderBookData = {
 
 export type OrdersList = [number, number][];
 export type OrdersData = {
-  [Order in OrdersActions]: OrdersList;
+  [Order in OrdersActions]?: OrdersList;
 };
