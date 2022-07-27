@@ -24,7 +24,6 @@ export const useTabBlurFocus = () => {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onBlur, onFocus]);
   return tabState;
 };

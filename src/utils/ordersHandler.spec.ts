@@ -1,5 +1,5 @@
 import { ordersHandler } from "./ordersHandler";
-import { OrdersActions, OrdersList, ProductsIds } from "types";
+import { OrdersList } from "types";
 import { cloneDeep } from "lodash";
 
 const defaultOrders = {
@@ -38,49 +38,47 @@ const newOrderdsToRemove: OrdersList = [
 
 describe("orderHandler function", () => {
   test("adds new orders to appropriate product and action", () => {
-    const deepCloned = cloneDeep(mockedData);
-    ordersHandler(
-      deepCloned,
+    const newProductData = ordersHandler(
+      cloneDeep(mockedData.PI_XBTUSD),
       newOrders,
-      OrdersActions.ASKS,
-      ProductsIds.PI_XBTUSD
+      []
     );
-    expect(deepCloned.PI_XBTUSD).toEqual(
-      expect.objectContaining({ asks: { 1: 1, 12: 23 }, bids: {} })
+
+    expect(newProductData).toEqual(
+      expect.objectContaining({
+        asks: { 1: 1, 12: 23 },
+        bids: mockedData.PI_XBTUSD.bids,
+      })
     );
-    expect(deepCloned.PI_ETHUSD).toEqual(mockedData.PI_ETHUSD);
   });
   test("removes empty orders", () => {
-    const deepCloned = cloneDeep(mockedData);
-    ordersHandler(
-      deepCloned,
+    const newProductData = ordersHandler(
+      cloneDeep(mockedData.PI_ETHUSD),
       newOrderdsToRemove,
-      OrdersActions.ASKS,
-      ProductsIds.PI_ETHUSD
+      newOrderdsToRemove
     );
-    ordersHandler(
-      deepCloned,
-      newOrderdsToRemove,
-      OrdersActions.BIDS,
-      ProductsIds.PI_ETHUSD
-    );
-    expect(deepCloned.PI_ETHUSD).toEqual(defaultOrders);
+
+    expect(newProductData).toEqual(defaultOrders);
   });
   test("not change anything with empty orders array", () => {
-    const deepCloned = cloneDeep(mockedData);
-    ordersHandler(deepCloned, [], OrdersActions.ASKS, ProductsIds.PI_ETHUSD);
-    expect(deepCloned).toEqual(mockedData);
-  });
-  test("overwrites orders with new sizes", () => {
-    const deepCloned = cloneDeep(mockedData);
-    ordersHandler(
-      deepCloned,
-      newOrdersToOverWrite,
-      OrdersActions.ASKS,
-      ProductsIds.PI_ETHUSD
+    const newProductData = ordersHandler(
+      cloneDeep(mockedData.PI_ETHUSD),
+      [],
+      []
     );
-    expect(deepCloned.PI_ETHUSD.asks).toEqual(
+    expect(newProductData).toEqual(mockedData.PI_ETHUSD);
+  });
+  test("overwrites only proper orders part", () => {
+    const newProductData = ordersHandler(
+      cloneDeep(mockedData.PI_ETHUSD),
+      newOrdersToOverWrite,
+      []
+    );
+    expect(newProductData.asks).toEqual(
       expect.objectContaining({ 1000: 1, 999: 1 })
+    );
+    expect(newProductData.bids).toEqual(
+      expect.objectContaining(mockedData.PI_ETHUSD.bids)
     );
   });
 });

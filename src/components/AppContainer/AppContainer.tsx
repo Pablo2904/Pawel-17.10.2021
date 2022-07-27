@@ -5,13 +5,7 @@ import { useFPSCore } from "fps-react";
 import { useInterval, useTabBlurFocus, TabState } from "hooks";
 import OrderBookContainer from "components/OrderBookContainer";
 import OrderBookHeader from "components/OrderBookHeader";
-import {
-  FeedsEvents,
-  OrdersActions,
-  ProductsIds,
-  OrdersData,
-  OrderBookData,
-} from "types";
+import { FeedsEvents, ProductsIds, OrdersData, OrderBookData } from "types";
 import { ordersHandler } from "utils";
 import { AppMainContainer, AppContainerWrapper } from "./AppContainer.styles";
 import Button from "components/Button";
@@ -36,6 +30,7 @@ type ResponseData = {
 export const AppContainer = () => {
   const SOCKET_URL = "wss://www.cryptofacilities.com/ws/v1";
   const RECONNECT_ATTEMPS_AMOUNT = 10;
+  const RECONNECT_INTERVAL = 3000;
   const [selectedId, setSelectedId] = useState<ProductsIds>(
     ProductsIds.PI_XBTUSD
   );
@@ -61,16 +56,18 @@ export const AppContainer = () => {
   const { sendMessage, lastMessage } = useWebSocket(SOCKET_URL, {
     shouldReconnect: () => true,
     retryOnError: true,
-    reconnectInterval: 3000,
+    reconnectInterval: RECONNECT_INTERVAL,
     reconnectAttempts: RECONNECT_ATTEMPS_AMOUNT,
     onError: () => {
       setRecconectAttemps((curr) => curr - 1);
       setErrorWS("There is some error with connection, trying to reconnect...");
     },
-    onOpen: () =>
-      errorWS &&
-      setErrorWS(undefined) &&
-      setRecconectAttemps(RECONNECT_ATTEMPS_AMOUNT),
+    onOpen: () => {
+      if (errorWS) {
+        setErrorWS(undefined);
+        setRecconectAttemps(RECONNECT_ATTEMPS_AMOUNT);
+      }
+    },
   });
   const tabState = useTabBlurFocus();
   const { fps } = useFPSCore({ fpsHistory: 5 });
@@ -79,12 +76,14 @@ export const AppContainer = () => {
     Math.round(fps.reduce((curr, next) => curr + next, 0) / fps.length);
 
   const handleData = (message: ResponseData) => {
+    if (message.event === ResponseEvents.unsubscribed) {
+      return setData(defaultObject);
+    }
+
     const productId = message?.product_id;
     const feed = message?.feed;
     const asks = message?.asks;
     const bids = message?.bids;
-    if (message.event === ResponseEvents.unsubscribed)
-      return setData(defaultObject);
     if (
       feed &&
       Object.values(FeedsEvents).includes(feed) &&
@@ -94,15 +93,18 @@ export const AppContainer = () => {
     ) {
       if (asks.length < 1 && bids.length < 1) return;
       const clonedData = cloneDeep(data);
-      ordersHandler(clonedData, asks, OrdersActions.ASKS, productId);
-      ordersHandler(clonedData, bids, OrdersActions.BIDS, productId);
-      setData(clonedData);
+      const currentProduct = clonedData[productId];
+      if (!currentProduct) return;
+
+      const newProductData = ordersHandler(currentProduct, asks, bids);
+
+      setData({ ...clonedData, [productId]: newProductData });
     }
   };
-  const onToogleClick = () => {
+  const onToogleClick = useCallback(() => {
     setStopThrottle(false);
     setSelectedId(prevSelectedId);
-  };
+  }, [prevSelectedId]);
   const handleConnect = (event: RequestEvents, product_ids: ProductsIds) =>
     sendMessage(
       JSON.stringify({

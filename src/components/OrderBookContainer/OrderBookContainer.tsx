@@ -6,7 +6,7 @@ import {
   OrderBookRowsContainer,
   OrderBookLoading,
 } from "./OrderBookContainer.styles";
-import { OrdersActions, OrderBookOrdersDict } from "types";
+import { OrdersActions, OrderBookOrdersDict, OrdersActionsNames } from "types";
 import colors from "styles";
 
 type OrderBookSpreadPropsType = {
@@ -33,10 +33,11 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
     !Number.isNaN(spread) &&
     ((spread / (lowestAskPrice + highestBidPrice)) * 100).toFixed(2);
 
-  const totalDict: { [order in OrdersActions]: { [index: number]: number } } = {
-    asks: {},
-    bids: {},
-  };
+  const totalDict: { [K in OrdersActionsNames]: { [index: number]: number } } =
+    {
+      asks: {},
+      bids: {},
+    };
 
   new Array(ROWS_AMOUNT).fill("").reduce(
     (curr, next, index) => {
@@ -55,7 +56,10 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
   return (
     <OrderBookWrapper>
       <OrderBookPart>
-        <OrderBookRow colorOverride={colors.grey} type={OrdersActions.BIDS} />
+        <OrderBookRow
+          colorOverride={colors.grey}
+          type={OrdersActions[1] as OrdersActionsNames}
+        />
         {bestTwentyBids.map((price, index) => {
           const precentageCoverage =
             (totalDict.bids[index] / totalDict.bids[ROWS_AMOUNT - 1]) * 100;
@@ -66,7 +70,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
               size={bids[price]}
               total={totalDict.bids[index]}
               precentageCoverage={precentageCoverage}
-              type={OrdersActions.BIDS}
+              type={OrdersActions[1] as OrdersActionsNames}
             />
           );
         })}
@@ -85,7 +89,7 @@ export const OrderBookContainer = ({ orders }: OrderBookSpreadPropsType) => {
                 size={asks[price]}
                 total={totalDict.asks[index]}
                 precentageCoverage={precentageCoverage}
-                type={OrdersActions.ASKS}
+                type={OrdersActions[0] as OrdersActionsNames}
               />
             );
           })}

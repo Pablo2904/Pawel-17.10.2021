@@ -1,7 +1,8 @@
 export enum OrdersActions {
-  ASKS = "asks",
-  BIDS = "bids",
+  "asks",
+  "bids",
 }
+export type OrdersActionsNames = keyof typeof OrdersActions;
 
 export enum ProductsIds {
   PI_XBTUSD = "PI_XBTUSD",
@@ -14,7 +15,7 @@ export enum FeedsEvents {
 }
 
 export type OrderBookOrdersDict = {
-  [Action in OrdersActions]: {
+  [K in OrdersActionsNames]: {
     [price: string]: number;
   };
 };
@@ -25,5 +26,5 @@ export type OrderBookData = {
 
 export type OrdersList = [number, number][];
 export type OrdersData = {
-  [Order in OrdersActions]?: OrdersList;
+  [Order in OrdersActionsNames]?: OrdersList;
 };
